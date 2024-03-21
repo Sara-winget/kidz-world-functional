@@ -92,8 +92,8 @@ var items = [
 
 function updateCart() {
   let cart = 0;
-  for (index = 0; index < items.length; index++) {
-    cart = cart + items[index].quantity;
+  for (let index = 0; index < items.length; index++) {
+    cart+=items[index].quantity;
   }
   cartValue.innerHTML = cart;
 }
@@ -111,10 +111,8 @@ var finalCents = 0;
 function updatePrice() {
   let totalPriceInCents = 0;
 
-  for (index = 0; index < items.length; index++) {
-    totalPriceInCents =
-      totalPriceInCents +
-      items[index].quantity * (items[index].dollars * 100 + items[index].cents);
+  for (let index = 0; index < items.length; index++) {
+    totalPriceInCents+=items[index].quantity * (items[index].dollars * 100 + items[index].cents);
   }
   finalDollars = Math.floor(totalPriceInCents / 100);
   finalCents = totalPriceInCents % 100;
@@ -123,6 +121,8 @@ function updatePrice() {
 
 cartButton.onclick = () => {
   updatePrice();
+
+  updateWhatsappLink(); 
 
 
   for (let index = 0; index < items.length; index++) {
@@ -140,3 +140,16 @@ cartButton.onclick = () => {
     "The total amount is " + finalDollars + "$ and " + finalCents + " cents"
   );
 };
+
+function updateWhatsappLink() {
+    let whatsappLink = "https://api.whatsapp.com/send?phone=9944671294&text=Order%20details";
+  
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].quantity !== 0) {
+        whatsappLink +=" %0A"+encodeURIComponent(items[i].name) + "%0A" +encodeURIComponent(items[i].quantity) + "%0A";
+      }
+    }
+    whatsappLink+="Total price: $"+finalDollars + finalCents + "c";
+  
+    window.open(whatsappLink, '_blank');
+  }
